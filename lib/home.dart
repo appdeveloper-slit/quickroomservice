@@ -14,6 +14,7 @@ import 'package:quick_room_services/sign_in.dart';
 import 'package:quick_room_services/values/colors.dart';
 import 'package:quick_room_services/values/dimens.dart';
 import 'package:quick_room_services/values/global_urls.dart';
+import 'package:quick_room_services/values/strings.dart';
 import 'package:quick_room_services/values/styles.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,6 +36,7 @@ class _HomeState extends State<Home> {
   String setLocation = "";
   GlobalKey<ScaffoldState> scaffoldState = GlobalKey<ScaffoldState>();
   List<dynamic> resultList = [];
+  List<dynamic> FillterList = [];
 
   List<String> imageList = [
     // "assets/img1.png",
@@ -44,14 +46,18 @@ class _HomeState extends State<Home> {
 
   void checkownertype() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
-    owner_type = sp.getString("user_type") != null ? sp.getString("user_type")! : "UNKNOWN";
-    print(owner_type);
+    owner_type = sp.getString("user_type") != null
+        ? sp.getString("user_type")!
+        : "UNKNOWN";
+    print('${owner_type}dagv');
 
     setState(() {
       owner_type = owner_type;
     });
   }
-  int pageIndex=0;
+
+  int pageIndex = 0;
+
   void viewallhostels() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     // sp.getString('location_id').toString();
@@ -76,7 +82,7 @@ class _HomeState extends State<Home> {
       loaded = true;
     });
     imageList = [];
-    for(int i = 0; i < res['sliders'].length; i++){
+    for (int i = 0; i < res['sliders'].length; i++) {
       imageList.add(res['sliders'][i]['img_path']);
     }
     print(res['location']);
@@ -90,6 +96,7 @@ class _HomeState extends State<Home> {
     if (res['error'] == false) {
       imageList = imageList;
       resultList = res['hostel'];
+      FillterList = resultList;
     } else {
       showDialog(
         context: context,
@@ -119,7 +126,6 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
-
   DateTime? currentBackPressTime;
 
   void checkConnectivity() async {
@@ -137,26 +143,45 @@ class _HomeState extends State<Home> {
             contentPadding: EdgeInsets.all(30),
             alignment: Alignment.center,
             children: [
-              Icon(Icons.wifi_off, size: 100, color: Colors.blue,),
-              SizedBox(height: 15,),
-              Align(alignment: Alignment.center, child: Text("Connection Error", style: TextStyle(fontSize: 20))),
-              SizedBox(height: 5,),
-              Align(alignment: Alignment.center, child: Text("No internet connection found.", style: TextStyle(fontSize: 18))),
-              SizedBox(height: 10,),
+              Icon(
+                Icons.wifi_off,
+                size: 100,
+                color: Colors.blue,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Align(
+                  alignment: Alignment.center,
+                  child:
+                      Text("Connection Error", style: TextStyle(fontSize: 20))),
+              SizedBox(
+                height: 5,
+              ),
+              Align(
+                  alignment: Alignment.center,
+                  child: Text("No internet connection found.",
+                      style: TextStyle(fontSize: 18))),
+              SizedBox(
+                height: 10,
+              ),
               Container(
                 // margin: EdgeInsets.only(left: 10, right: 10),
                 child: ElevatedButton(
-                  onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()));
-                }, child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                    Expanded(child: Center(child: Text("TRY AGAIN"))),
-                    Icon(Icons.refresh)
-                  ],),
-                )),
+                    onPressed: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => Home()));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: Center(child: Text("TRY AGAIN"))),
+                          Icon(Icons.refresh)
+                        ],
+                      ),
+                    )),
               )
             ],
           );
@@ -174,7 +199,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     ctx = context;
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -186,38 +211,37 @@ class _HomeState extends State<Home> {
               content: Text("Do you want to exist application?"),
               actions: [
                 TextButton(
-                    onPressed: () =>SystemNavigator.pop(),
-                    child: Text("Yes")),
+                    onPressed: () => SystemNavigator.pop(), child: Text("Yes")),
                 TextButton(
-                    onPressed: () =>Navigator.pop(ctx),
-                    child: Text("No")),
+                    onPressed: () => Navigator.pop(ctx), child: Text("No")),
               ],
             );
           },
         );
         return false;
-            // DateTime now = DateTime.now();
-            // if (currentBackPressTime == null ||
-            //     now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
-            //   currentBackPressTime = now;
-            //   SnackBar sn = SnackBar(content: Text("Press back again to exit"), duration: Duration(milliseconds: 500),);
-            //   ScaffoldMessenger.of(context).showSnackBar(sn);
-            //   return Future.value(false);
-            // }
-            // else{
-            //   SystemNavigator.pop();
-            //   return Future.value(true);
-            // }
-          },
+        // DateTime now = DateTime.now();
+        // if (currentBackPressTime == null ||
+        //     now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+        //   currentBackPressTime = now;
+        //   SnackBar sn = SnackBar(content: Text("Press back again to exit"), duration: Duration(milliseconds: 500),);
+        //   ScaffoldMessenger.of(context).showSnackBar(sn);
+        //   return Future.value(false);
+        // }
+        // else{
+        //   SystemNavigator.pop();
+        //   return Future.value(true);
+        // }
+      },
       child: Scaffold(
-        drawer: navbar(ctx,scaffoldState,owner_type),
+        drawer: navbar(ctx, scaffoldState, owner_type),
         key: scaffoldState,
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Color(0xff21488c),
-          leading: InkWell(onTap: (){
-            scaffoldState.currentState?.openDrawer();
-          },
+          leading: InkWell(
+            onTap: () {
+              scaffoldState.currentState?.openDrawer();
+            },
             child: Padding(
               padding: EdgeInsets.all(Dim().d14),
               child: SvgPicture.asset(
@@ -228,7 +252,7 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          title: Image.asset('assets/homelogo.jpg',height: Dim().d36),
+          title: Image.asset('assets/homelogo.jpg', height: Dim().d36),
           // Wrap(
           //   children: [
           //     Text(
@@ -249,24 +273,28 @@ class _HomeState extends State<Home> {
           // ),
           actions: [
             InkWell(
-              onTap: (){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SelectLocation()));
+              onTap: () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => SelectLocation()));
               },
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Wrap(crossAxisAlignment: WrapCrossAlignment.center,
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    SvgPicture.asset('assets/location.svg',height: Dim().d20),
+                    SvgPicture.asset('assets/location.svg', height: Dim().d20),
                     SizedBox(width: Dim().d8),
                     SizedBox(
                       width: Dim().d80,
                       child: Text(
-                        setLocation.isNotEmpty ? setLocation.toString() + " " : '',
+                        setLocation.isNotEmpty
+                            ? setLocation.toString() + " "
+                            : '',
                         overflow: TextOverflow.ellipsis,
                         style: Sty().mediumText.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                        ),
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                            ),
                       ),
                     ),
                   ],
@@ -315,151 +343,209 @@ class _HomeState extends State<Home> {
             // ),
           ],
         ),
-        body: loaded ? UpgradeAlert(
-          upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.material),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(Dim().d12),
-            child: Column(
-              children: [
-                // SizedBox(height: 0),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Center(
-                //       child: Container(
-                //         margin: EdgeInsets.only(right: 8),
-                //         child: Text(
-                //           'Want to list your Hostel?',
-                //           style: Sty().mediumText.copyWith(
-                //                 fontSize: 18,
-                //               ),
-                //         ),
-                //       ),
-                //     ),
-                //     SizedBox(
-                //       height: 40,
-                //       width: 100,
-                //       child: ElevatedButton(
-                //           style: Sty().primaryButton,
-                //           onPressed: () {},
-                //           child: Text(
-                //             'Tap Here',
-                //             style: Sty().mediumText.copyWith(
-                //                   color: Clr().white,
-                //                 ),
-                //           )),
-                //     ),
-                //   ],
-                // ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Material(
-                        shadowColor: Clr().grey.withOpacity(0.4),
-                        elevation: 3.0,
-                        borderRadius: BorderRadius.circular(Dim().d20),
-                        child: TextFormField(
-                         decoration: Sty().TextFormFieldOutlineStyleWithHome.copyWith(
-                           hintText: 'Search Place, home,',
-                           suffixIcon: Padding(
-                             padding: EdgeInsets.all(Dim().d16),
-                             child: const Icon(Icons.search,color: Color(0xFF343E42)),
-                           ),
-                         ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: Dim().d20),
-                    SvgPicture.asset('assets/filterhome.svg',height: Dim().d52)
-                  ],
-                ),
-                SizedBox(height: Dim().d20),
-                Column(
-                  children: [
-                    CarouselSlider(
-                      options: CarouselOptions(
-                        viewportFraction: 1,
-                        enlargeCenterPage: true,
-                        enableInfiniteScroll: true,
-                        autoPlay: true,
-                        aspectRatio: 2.0,
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            pageIndex = index;
-                          });
-                        },
-                      ),
-                      items: imageList
-                          .map((e) => ClipRRect(
-                                // borderRadius: BorderRadius.circular(10),
-                                child: Stack(
-                                  fit: StackFit.expand,
-                                  children: <Widget>[
-                                    CachedNetworkImage(
-                              imageUrl: mainDomain() + e,
-                                      width: 1200,
-                                      height: 300,
-                                      fit: BoxFit.cover,
-                //                       placeholder:Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     CircularProgressIndicator(),
-                //   ],
-                // ),
-                            ),
-                                  ],
+        body: loaded
+            ? UpgradeAlert(
+                upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.material),
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(Dim().d12),
+                  child: Column(
+                    children: [
+                      // SizedBox(height: 0),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Center(
+                      //       child: Container(
+                      //         margin: EdgeInsets.only(right: 8),
+                      //         child: Text(
+                      //           'Want to list your Hostel?',
+                      //           style: Sty().mediumText.copyWith(
+                      //                 fontSize: 18,
+                      //               ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     SizedBox(
+                      //       height: 40,
+                      //       width: 100,
+                      //       child: ElevatedButton(
+                      //           style: Sty().primaryButton,
+                      //           onPressed: () {},
+                      //           child: Text(
+                      //             'Tap Here',
+                      //             style: Sty().mediumText.copyWith(
+                      //                   color: Clr().white,
+                      //                 ),
+                      //           )),
+                      //     ),
+                      //   ],
+                      // ),
+                      owner_type == "2"
+                          ? Container()
+                          : Row(
+                              children: [
+                                Expanded(
+                                  child: Material(
+                                    shadowColor: Clr().grey.withOpacity(0.4),
+                                    elevation: 3.0,
+                                    borderRadius:
+                                        BorderRadius.circular(Dim().d20),
+                                    child: TextFormField(
+                                      decoration: Sty()
+                                          .TextFormFieldOutlineStyleWithHome
+                                          .copyWith(
+                                            hintText: 'Search Place, home,',
+                                            suffixIcon: Padding(
+                                              padding:
+                                                  EdgeInsets.all(Dim().d16),
+                                              child: const Icon(Icons.search,
+                                                  color: Color(0xFF343E42)),
+                                            ),
+                                          ),
+                                      onChanged: searchresult,
+                                    ),
+                                  ),
                                 ),
-                              ))
-                          .toList(),
-
-                    ),
-                    SizedBox(
-                      height: Dim().d16,
-                    ),
-                   CarouselIndicator(
-                     height: 8.0,
-                     width: 8.0,
-                     cornerRadius: 100.0,
-                     activeColor: Clr().black,
-                     index: pageIndex,
-                     count: imageList.length,
-                     color: Clr().grey,
-                   ),
-                    // Wrap(
-                    //   children: imageList.asMap().entries.map((entry) {
-                    //     return Container(
-                    //       width: 8,
-                    //       height: 8,
-                    //       margin: const EdgeInsets.symmetric(
-                    //         horizontal: 2,
-                    //       ),
-                    //       decoration: BoxDecoration(
-                    //         shape:BoxShape.circle,
-                    //         color: Clr().primaryColor,
-                    //       ),
-                    //     );
-                    //   }).toList(),
-                    // ),
-                    SizedBox(height: 12),
-                    (resultList.length > 0) ? GridView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisExtent: 225,
-                      ),
-                      // itemCount: resultList.length,
-                      itemCount: resultList.length,
-                      itemBuilder: (context, index) {
-                        return itemLayout(context, index, resultList);
-                      },
-                    ) : Container(margin: EdgeInsets.only(top: 150), child: Center(child: Text("No Data Found", style: TextStyle(color: Clr().blue, fontSize:24)))),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ) : Center(child: CircularProgressIndicator(),),
+                                SizedBox(width: Dim().d20),
+                                PopupMenuButton(
+                                  // ignore: sort_child_properties_last
+                                  child: SvgPicture.asset(
+                                      'assets/filterhome.svg',
+                                      height: Dim().d52),
+                                  color: Color(0xff333741),
+                                  offset: Offset(-40, 19),
+                                  itemBuilder: (context) {
+                                    return [
+                                      PopupMenuItem(
+                                        child: Text(
+                                          'Boys Hostel',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'NotoSansTaiTham',
+                                              color: Colors.white),
+                                        ),
+                                        onTap: () {
+                                          getSearchList('Boys Hostel');
+                                        },
+                                      ),
+                                      PopupMenuItem(
+                                        child: Text(
+                                          'Girls Room',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'NotoSansTaiTham',
+                                              color: Colors.white),
+                                        ),
+                                        onTap: () {
+                                          getSearchList('Girls Room');
+                                        },
+                                      ),
+                                    ];
+                                  },
+                                ),
+                              ],
+                            ),
+                      SizedBox(height: Dim().d20),
+                      Column(
+                        children: [
+                          CarouselSlider(
+                            options: CarouselOptions(
+                              viewportFraction: 1,
+                              enlargeCenterPage: true,
+                              enableInfiniteScroll: true,
+                              autoPlay: true,
+                              aspectRatio: 2.0,
+                              onPageChanged: (index, reason) {
+                                setState(() {
+                                  pageIndex = index;
+                                });
+                              },
+                            ),
+                            items: imageList
+                                .map((e) => ClipRRect(
+                                      // borderRadius: BorderRadius.circular(10),
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: <Widget>[
+                                          CachedNetworkImage(
+                                            imageUrl: mainDomain() + e,
+                                            width: 1200,
+                                            height: 300,
+                                            fit: BoxFit.cover,
+                                            //                       placeholder:Row(
+                                            //   mainAxisAlignment: MainAxisAlignment.center,
+                                            //   children: [
+                                            //     CircularProgressIndicator(),
+                                            //   ],
+                                            // ),
+                                          ),
+                                        ],
+                                      ),
+                                    ))
+                                .toList(),
+                          ),
+                          SizedBox(
+                            height: Dim().d16,
+                          ),
+                          CarouselIndicator(
+                            height: 8.0,
+                            width: 8.0,
+                            cornerRadius: 100.0,
+                            activeColor: Clr().black,
+                            index: pageIndex,
+                            count: imageList.length,
+                            color: Clr().grey,
+                          ),
+                          // Wrap(
+                          //   children: imageList.asMap().entries.map((entry) {
+                          //     return Container(
+                          //       width: 8,
+                          //       height: 8,
+                          //       margin: const EdgeInsets.symmetric(
+                          //         horizontal: 2,
+                          //       ),
+                          //       decoration: BoxDecoration(
+                          //         shape:BoxShape.circle,
+                          //         color: Clr().primaryColor,
+                          //       ),
+                          //     );
+                          //   }).toList(),
+                          // ),
+                          SizedBox(height: 12),
+                          (FillterList.length > 0)
+                              ? GridView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisExtent: 225,
+                                  ),
+                                  // itemCount: resultList.length,
+                                  itemCount: FillterList.length,
+                                  itemBuilder: (context, index) {
+                                    return itemLayout(
+                                        context, index, FillterList);
+                                  },
+                                )
+                              : Container(
+                                  margin: EdgeInsets.only(top: 150),
+                                  child: Center(
+                                      child: Text("No Data Found",
+                                          style: TextStyle(
+                                              color: Clr().blue,
+                                              fontSize: 24)))),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            : Center(
+                child: CircularProgressIndicator(),
+              ),
       ),
     );
   }
@@ -468,36 +554,51 @@ class _HomeState extends State<Home> {
   Widget itemLayout(context, index, list) {
     return InkWell(
       onTap: () {
-        STM().redirect2page(ctx, Details(hostel_id: list[index]['id'].toString(),
-          hostelName: list[index]['name'].toString(),
-          hostelAddress: list[index]['address'].toString(), 
-          ownerName: list[index]['owner_name'].toString(), 
-          ownerNumber: list[index]['owner_number'].toString(), 
-          alternateNumber: list[index]['alt_number'].toString(), 
-          ownerEmail: list[index]['email'].toString(),
-          hostelTelephoneNumber: list[index]['tel_number'].toString(),
-          hostelType: list[index]['hostel_type'].toString(),
-          vacancyCountAvailable: list[index]['vancany'].toString(),
-          extraCharges: list[index]['extra_charge'].toString(),
-          gateClosingTime: list[index]['close_time'].toString(),
-          monthly_charge: list[index]['monthly_charge'].toString(),
-          facility: list[index]['facility'].toString(),
-          conditions: list[index]['condition'].toString(),
-          lat: list[index]['latitude'].toString(),
-          long: list[index]['longitude'].toString()
-         ));
+        STM().redirect2page(
+            ctx,
+            Details(
+                hostel_id: list[index]['id'].toString(),
+                hostelName: list[index]['name'].toString(),
+                hostelAddress: list[index]['address'].toString(),
+                ownerName: list[index]['owner_name'].toString(),
+                ownerNumber: list[index]['owner_number'].toString(),
+                alternateNumber: list[index]['alt_number'].toString(),
+                ownerEmail: list[index]['email'].toString(),
+                hostelTelephoneNumber: list[index]['tel_number'].toString(),
+                hostelType: list[index]['hostel_type'].toString(),
+                vacancyCountAvailable: list[index]['vancany'].toString(),
+                extraCharges: list[index]['extra_charge'].toString(),
+                gateClosingTime: list[index]['close_time'].toString(),
+                monthly_charge: list[index]['monthly_charge'].toString(),
+                facility: list[index]['facility'].toString(),
+                conditions: list[index]['condition'].toString(),
+                lat: list[index]['latitude'].toString(),
+                long: list[index]['longitude'].toString()));
       },
       child: Card(
         margin: const EdgeInsets.all(4),
         child: Column(
           children: [
-            list[index]['image_path'] != null ? CachedNetworkImage(imageUrl: list[index]['image_path'].toString(), height: 130, placeholder:(context, url) => Row(mainAxisAlignment: MainAxisAlignment.center, children: [CircularProgressIndicator()]),) : Icon(Icons.broken_image, size: 130,),
+            list[index]['image_path'] != null
+                ? CachedNetworkImage(
+                    imageUrl: list[index]['image_path'].toString(),
+                    height: 130,
+                    placeholder: (context, url) => Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [CircularProgressIndicator()]),
+                  )
+                : Icon(
+                    Icons.broken_image,
+                    size: 130,
+                  ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dim().d8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 7,),
+                  SizedBox(
+                    height: 7,
+                  ),
                   Text(
                     list[index]['name'].toString(),
                     textAlign: TextAlign.left,
@@ -507,7 +608,10 @@ class _HomeState extends State<Home> {
                         ),
                   ),
                   Text(
-                    list[index]["hostel_type"].toString() + '  \u20b9' + list[index]['monthly_charge'].toString() + '/month',
+                    list[index]["hostel_type"].toString() +
+                        '  \u20b9' +
+                        list[index]['monthly_charge'].toString() +
+                        '/month',
                     textAlign: TextAlign.start,
                     style: Sty().mediumText.copyWith(
                           fontSize: 10,
@@ -515,9 +619,9 @@ class _HomeState extends State<Home> {
                         ),
                   ),
                   Text(
-                   list[index]['address'],
-                   maxLines: 2,
-                   overflow: TextOverflow.ellipsis,
+                    list[index]['address'],
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: Sty().mediumText.copyWith(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
@@ -530,5 +634,41 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void searchresult(String value) {
+    if (value.isEmpty) {
+      setState(() {
+        FillterList = resultList;
+      });
+    } else {
+      setState(() {
+        FillterList = resultList.where((element) {
+          final resultTitle = element['name'].toLowerCase();
+          final input = value.toLowerCase();
+          return resultTitle
+              .toString()
+              .toLowerCase()
+              .startsWith(input.toString().toLowerCase());
+        }).toList();
+      });
+    }
+  }
+
+  void getSearchList(type) async {
+    FormData body = FormData.fromMap({
+      'hostel_type': type,
+    });
+    var result = await STM().post(ctx, Str().loading, 'search', body);
+    var success = result['error'];
+    var message = result['message'];
+    if (success) {
+      setState(() {
+        resultList = result['hostel'];
+        FillterList = resultList;
+      });
+    } else {
+      STM().errorDialog(ctx, message);
+    }
   }
 }

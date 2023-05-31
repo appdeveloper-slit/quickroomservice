@@ -767,7 +767,7 @@ class AddPage extends State<Add> {
             SizedBox(
               height: 20,
             ),
-            Text('Alternate Number:',
+            Text('Whatsapp Number:',
                 style: Sty().mediumText.copyWith(fontSize: 18)),
             SizedBox(height: 12),
             TextFormField(
@@ -777,7 +777,7 @@ class AddPage extends State<Add> {
               decoration: InputDecoration(
                 counterText: "",
                 contentPadding: EdgeInsets.all(10),
-                hintText: 'Enter Alternate Number',
+                hintText: 'Enter whatsapp Number',
                 border: InputBorder.none,
                 fillColor: Colors.black12,
                 filled: true,
@@ -1653,7 +1653,7 @@ class AddPage extends State<Add> {
                                                     color: Colors.red),
                                               ),
                                               content: Text(
-                                                  "Please enter a valid alternate number."),
+                                                  "Please enter a valid whatsapp number."),
                                               actions: [
                                                 TextButton(
                                                     onPressed: () =>

@@ -476,7 +476,7 @@ class _DetailsState extends State<Details> {
 
                 SizedBox(height: 20),
                 Text(
-                  'Alternate Number',
+                  'Whatsapp Number',
                   style: Sty().mediumText.copyWith(
                         fontSize: 18,
                       ),
@@ -893,7 +893,7 @@ class _DetailsState extends State<Details> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(onTap: ()async{
-                     await launch("whatsapp://send?phone=${ownerNumber.toString()}");
+                     await launch("whatsapp://send?phone=${alternateNumber.toString()}");
                     },
                       child: Row(
                         children: [
@@ -908,6 +908,7 @@ class _DetailsState extends State<Details> {
                       ),
                     ),
                     SizedBox(width: Dim().d24),
+
                     InkWell(
                       onTap: () async {
                         String googleUrl =

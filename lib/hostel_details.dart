@@ -346,12 +346,12 @@ class _DetailsState extends State<Details> {
                         fontSize: 18,
                       ),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: Dim().d12),
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     hostelName,
                     style: Sty()
                         .mediumText
@@ -390,7 +390,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     hostelAddress,
                     style: Sty()
                         .mediumText
@@ -428,7 +428,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     ownerName,
                     style: Sty()
                         .mediumText
@@ -448,7 +448,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     ownerNumber,
                     style: Sty()
                         .mediumText
@@ -486,7 +486,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     alternateNumber,
                     style: Sty()
                         .mediumText
@@ -523,7 +523,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     ownerEmail,
                     style: Sty()
                         .mediumText
@@ -560,7 +560,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     hostelTelephoneNumber,
                     style: Sty()
                         .mediumText
@@ -597,7 +597,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     hostelType,
                     style: Sty()
                         .mediumText
@@ -634,7 +634,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     vacancyCountAvailable,
                     style: Sty()
                         .mediumText
@@ -671,7 +671,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     extraCharges,
                     style: Sty()
                         .mediumText
@@ -716,7 +716,7 @@ class _DetailsState extends State<Details> {
                         width: double.infinity,
                         padding: EdgeInsets.all(12),
                         color: Colors.black12,
-                        child: Text(
+                        child: SelectableText(
                           gateClosingTime,
                           style: Sty()
                               .mediumText
@@ -747,7 +747,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     '\u20b9' + monthly_charge,
                     style: Sty()
                         .mediumText
@@ -784,7 +784,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     facility,
                     style: Sty()
                         .mediumText
@@ -803,7 +803,7 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   padding: EdgeInsets.all(12),
                   color: Colors.black12,
-                  child: Text(
+                  child: SelectableText(
                     conditions,
                     style: Sty()
                         .mediumText
@@ -970,7 +970,6 @@ class _DetailsState extends State<Details> {
   }
 
 // get Review
-
   void getReview() async {
     FormData body = FormData.fromMap({
       'hostel_id': hostel_id.toString(),

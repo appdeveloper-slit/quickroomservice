@@ -1,15 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:multi_image_crop/multi_image_crop.dart';
 import 'package:quick_room_services/home.dart';
 import 'package:quick_room_services/manage/static_method.dart';
 import 'package:quick_room_services/values/colors.dart';
 import 'package:quick_room_services/values/global_urls.dart';
-import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validators/validators.dart';
 import 'package:image_picker/image_picker.dart';
@@ -52,7 +53,7 @@ class AddPage extends State<Add> {
     ["No Limit", "1"]
   ];
   String sTime = "0";
-
+  AwesomeDialog? dialog;
   bool loaded = true;
   String latitude = '';
   String longitude = '';
@@ -115,40 +116,40 @@ class AddPage extends State<Add> {
     });
   }
 
-  void getLocation() async {
-    Location location = new Location();
-
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _locationData = await location.getLocation();
-    print(_locationData.latitude);
-    print(_locationData.longitude);
-    latitude = _locationData.latitude.toString();
-    longitude = _locationData.longitude.toString();
-
-    setState(() {
-      locationCapText =
-          "latitude: " + latitude + "\n" + "longitude: " + longitude;
-    });
-  }
+  // void getLocation() async {
+  //   Location location = new Location();
+  //
+  //   bool _serviceEnabled;
+  //   PermissionStatus _permissionGranted;
+  //   LocationData _locationData;
+  //
+  //   _serviceEnabled = await location.serviceEnabled();
+  //   if (!_serviceEnabled) {
+  //     _serviceEnabled = await location.requestService();
+  //     if (!_serviceEnabled) {
+  //       return;
+  //     }
+  //   }
+  //
+  //   _permissionGranted = await location.hasPermission();
+  //   if (_permissionGranted == PermissionStatus.denied) {
+  //     _permissionGranted = await location.requestPermission();
+  //     if (_permissionGranted != PermissionStatus.granted) {
+  //       return;
+  //     }
+  //   }
+  //
+  //   _locationData = await location.getLocation();
+  //   print(_locationData.latitude);
+  //   print(_locationData.longitude);
+  //   latitude = _locationData.latitude.toString();
+  //   longitude = _locationData.longitude.toString();
+  //
+  //   setState(() {
+  //     locationCapText =
+  //         "latitude: " + latitude + "\n" + "longitude: " + longitude;
+  //   });
+  // }
 
 
   List<dynamic> imageList = [
@@ -716,7 +717,7 @@ class AddPage extends State<Add> {
                         child: ElevatedButton(
                             style: Sty().primaryButton,
                             onPressed: () {
-                              getLocation();
+                              permissionHandle();
                             },
                             child: Text('Capture',
                                 style: Sty().mediumText.copyWith(
@@ -1813,5 +1814,42 @@ class AddPage extends State<Add> {
         ),
       ),
     );
+  }
+  Future<void> permissionHandle() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
+      getcurrentLocation();
+    }
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.deniedForever) {
+      STM().displayToast('Location permission is required');
+      await Geolocator.openAppSettings();
+    }
+  }
+
+  // getLocation
+  getcurrentLocation() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    LocationPermission permission = await Geolocator.requestPermission();
+    dialog = STM().loadingDialog(ctx, 'Fetch location');
+    dialog!.show();
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((Position position)  {
+      setState(()  {
+        STM().displayToast('Current location is selected');
+        latitude = position.latitude.toString();
+        longitude = position.longitude.toString();
+        setState(() {
+          locationCapText =
+              "latitude: " + latitude + "\n" + "longitude: " + longitude;
+        });
+        dialog!.dismiss();
+      });
+    }).catchError((e){
+      dialog!.dismiss();
+    });
   }
 }

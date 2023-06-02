@@ -20,13 +20,7 @@ class ReviewPage extends StatefulWidget {
 
 class _ReviewPageState extends State<ReviewPage> {
   late BuildContext ctx;
-  List<Map<String, dynamic>> percentList = [
-    {'text': '5', 'percent': 0.8},
-    {'text': '4', 'percent': 0.6},
-    {'text': '3', 'percent': 0.4},
-    {'text': '2', 'percent': 0.3},
-    {'text': '1', 'percent': 0.1},
-  ];
+  List percentList = [];
 
   List<dynamic> reviewList = [];
   var averageRate;
@@ -137,7 +131,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               animation: true,
                               lineHeight: 8.0,
                               animationDuration: 2500,
-                              percent: percentList[index]['percent'],
+                              percent: percentList[index]['percent'] / 100,
                               linearStrokeCap: LinearStrokeCap.roundAll,
                               progressColor: Colors.yellow[700],
                               barRadius: Radius.circular(Dim().d4),
@@ -265,6 +259,7 @@ class _ReviewPageState extends State<ReviewPage> {
     setState(() {
       reviewList = result['review'];
       averageRate = result['review_avg'];
+      percentList = result['review_summary'];
     });
   }
 }

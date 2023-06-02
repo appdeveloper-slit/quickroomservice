@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:quick_room_services/hostel_details.dart';
 import 'package:quick_room_services/manage/static_method.dart';
@@ -28,6 +29,10 @@ class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
 }
+
+enum GenderType { boy, girl }
+
+enum PriceType { lowtohigh, hightolow }
 
 class _HomeState extends State<Home> {
   late BuildContext ctx;
@@ -57,6 +62,7 @@ class _HomeState extends State<Home> {
   }
 
   int pageIndex = 0;
+  var city;
 
   void viewallhostels() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -117,12 +123,25 @@ class _HomeState extends State<Home> {
     }
   }
 
+  getLocation() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    double lat = double.parse(sp.getString('lat').toString());
+    double lng = double.parse(sp.getString('lng').toString());
+    List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
+    setState(() {
+      Placemark placeMark = placemarks[0];
+      city = placeMark.subLocality;
+      print(city);
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     checkConnectivity();
     checkownertype();
     viewallhostels();
+    getLocation();
     super.initState();
   }
 
@@ -252,7 +271,7 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          title: Image.asset('assets/homelogo.jpg', height: Dim().d36),
+          title: Image.asset('assets/logo.png', height: Dim().d56,width: Dim().d80,fit: BoxFit.fitWidth),
           // Wrap(
           //   children: [
           //     Text(
@@ -289,7 +308,7 @@ class _HomeState extends State<Home> {
                       child: Text(
                         setLocation.isNotEmpty
                             ? setLocation.toString() + " "
-                            : '',
+                            : city.toString(),
                         overflow: TextOverflow.ellipsis,
                         style: Sty().mediumText.copyWith(
                               color: Colors.white,
@@ -394,7 +413,7 @@ class _HomeState extends State<Home> {
                                       decoration: Sty()
                                           .TextFormFieldOutlineStyleWithHome
                                           .copyWith(
-                                            hintText: 'Search Place, home,',
+                                            hintText: 'Search hostel name',
                                             suffixIcon: Padding(
                                               padding:
                                                   EdgeInsets.all(Dim().d16),
@@ -418,7 +437,7 @@ class _HomeState extends State<Home> {
                                     return [
                                       PopupMenuItem(
                                         child: Text(
-                                          'Boys Hostel',
+                                          'Hostel Category',
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400,
@@ -426,12 +445,14 @@ class _HomeState extends State<Home> {
                                               color: Colors.white),
                                         ),
                                         onTap: () {
-                                          getSearchList('Boys Hostel');
+                                          Future.delayed(Duration(seconds: 0),
+                                              () => categoryFilter());
+                                          // getSearchList('Boys Hostel');
                                         },
                                       ),
                                       PopupMenuItem(
                                         child: Text(
-                                          'Girls Room',
+                                          'Pricing',
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w400,
@@ -439,7 +460,21 @@ class _HomeState extends State<Home> {
                                               color: Colors.white),
                                         ),
                                         onTap: () {
-                                          getSearchList('Girls Room');
+                                          Future.delayed(Duration(seconds: 0),
+                                              () => priceFilter());
+                                        },
+                                      ),
+                                      PopupMenuItem(
+                                        child: Text(
+                                          'Rating',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'NotoSansTaiTham',
+                                              color: Colors.white),
+                                        ),
+                                        onTap: () {
+                                          getSearchList('type', 'rating');
                                         },
                                       ),
                                     ];
@@ -655,9 +690,13 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void getSearchList(type) async {
+  void getSearchList(key, type) async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
     FormData body = FormData.fromMap({
-      'hostel_type': type,
+      key: type,
+      'location_id': sp.getString('location_id').toString(),
+      'latitude': sp.getString('lat').toString(),
+      'longitude': sp.getString('lng').toString(),
     });
     var result = await STM().post(ctx, Str().loading, 'search', body);
     var success = result['error'];
@@ -668,7 +707,89 @@ class _HomeState extends State<Home> {
         FillterList = resultList;
       });
     } else {
-      STM().errorDialog(ctx, message);
+      setState(() {
+        resultList = result['hostel'];
+        FillterList = resultList;
+      });
     }
+  }
+
+  // category filter
+  categoryFilter() {
+    return showDialog(
+        context: context,
+        builder: (index) {
+          return AlertDialog(
+            title: Text('Choose', style: Sty().mediumBoldText),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  title: const Text('Boy'),
+                  leading: Radio<GenderType>(
+                    value: GenderType.boy,
+                    groupValue: null,
+                    onChanged: (GenderType? value) {
+                      getSearchList('hostel_type', 'boy');
+                      STM().back2Previous(ctx);
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Girl'),
+                  leading: Radio<GenderType>(
+                    value: GenderType.girl,
+                    groupValue: null,
+                    onChanged: (GenderType? value) {
+                      getSearchList('hostel_type', 'girl');
+                      STM().back2Previous(ctx);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  priceFilter() {
+    return showDialog(
+        context: context,
+        builder: (index) {
+          return AlertDialog(
+            title: Text('Choose', style: Sty().mediumBoldText),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ListTile(
+                  title: const Text('Low To High'),
+                  leading: Radio<PriceType>(
+                    value: PriceType.lowtohigh,
+                    groupValue: null,
+                    onChanged: (PriceType? value) {
+                      getSearchList('price', 'lowtohigh');
+                      STM().back2Previous(ctx);
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: const Text('High To Low'),
+                  leading: Radio<PriceType>(
+                    value: PriceType.hightolow,
+                    groupValue: null,
+                    onChanged: (PriceType? value) {
+                      getSearchList('price', 'hightolow');
+                      STM().back2Previous(ctx);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }

@@ -56,7 +56,7 @@ android {
         versionName flutterVersionName
 
         multiDexEnabled true
-        archivesBaseName = "QRS"
+        archivesBaseName = "ResiEasy"
     }
 
 //    signingConfigs {

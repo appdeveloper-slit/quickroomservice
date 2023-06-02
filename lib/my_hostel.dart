@@ -187,19 +187,23 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(Dim().d12),
-                                      border: Border.all(
-                                          color: Clr().primaryColor)),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: Dim().d12),
-                                    child: Center(
-                                      child: Text('Cancel',
-                                          style: Sty().mediumText.copyWith(
-                                              color: Clr().primaryColor)),
+                                child: InkWell(onTap:(){
+                                  STM().back2Previous(ctx);
+                                },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(Dim().d12),
+                                        border: Border.all(
+                                            color: Clr().primaryColor)),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: Dim().d12),
+                                      child: Center(
+                                        child: Text('Cancel',
+                                            style: Sty().mediumText.copyWith(
+                                                color: Clr().primaryColor)),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -313,6 +317,7 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [CircularProgressIndicator()],
                                 ),
+                            fit: BoxFit.cover,
                             width: 130,
                             height: 100))
                     : Icon(
@@ -325,7 +330,6 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
                         list[index]['name'],
@@ -333,19 +337,22 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                               fontSize: 18,
                             ),
                       ),
+                      SizedBox(height: Dim().d4),
                       Text(
                         list[index]['hostel_type'],
                         style: Sty().mediumText.copyWith(
-                              fontSize: 18,
+                              fontSize: Dim().d16,
                             ),
                       ),
+                      SizedBox(height: Dim().d4),
                       Text(
                         list[index]['address'],
-                        maxLines: 1,
+                        maxLines: 2,
                         style: Sty().mediumText.copyWith(
                               fontSize: 14,
                             ),
                       ),
+                      SizedBox(height: Dim().d4),
                       // list[index]['status'] != 0
                       //     ? Text(
                       //         "Active",
@@ -362,7 +369,7 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                       //         ),
                       //       ),
                       Text(
-                        "Views: ",
+                        "Views: ${list[index]['count'] ?? 0}",
                         style: Sty().mediumText.copyWith(fontSize: Dim().d14),
                       ),
                     ],

@@ -28,7 +28,7 @@ class _RegisterState extends State<Register> {
     {'id': '1', 'name': 'Student'},
     {'id': '2', 'name': 'Hostel Owner'},
   ];
-
+  bool? signUpProcess;
   String? sDropdown;
 
   void signUpUser(String name, String number, String dropdownvalue) async {
@@ -55,8 +55,8 @@ class _RegisterState extends State<Register> {
       sp.setString("user_type", res['user']['type'].toString());
       sp.setString("user_name", res['user']['name'].toString());
       sp.setString("user_phone", res['user']['phone'].toString());
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => SelectLocation()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => SelectLocation()));
     } else {
       showDialog(
         context: context,
@@ -92,27 +92,45 @@ class _RegisterState extends State<Register> {
             contentPadding: EdgeInsets.all(30),
             alignment: Alignment.center,
             children: [
-              Icon(Icons.wifi_off, size: 100, color: Colors.blue,),
-              SizedBox(height: 15,),
-              Align(alignment: Alignment.center, child: Text("Connection Error", style: TextStyle(fontSize: 20))),
-              SizedBox(height: 5,),
-              Align(alignment: Alignment.center, child: Text("No internet connection found.", style: TextStyle(fontSize: 18))),
-              SizedBox(height: 10,),
+              Icon(
+                Icons.wifi_off,
+                size: 100,
+                color: Colors.blue,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Align(
+                  alignment: Alignment.center,
+                  child:
+                      Text("Connection Error", style: TextStyle(fontSize: 20))),
+              SizedBox(
+                height: 5,
+              ),
+              Align(
+                  alignment: Alignment.center,
+                  child: Text("No internet connection found.",
+                      style: TextStyle(fontSize: 18))),
+              SizedBox(
+                height: 10,
+              ),
               Container(
                 // margin: EdgeInsets.only(left: 10, right: 10),
                 child: ElevatedButton(
-                  
-                  onPressed: (){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Register()));
-                }, child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                    Expanded(child: Center(child: Text("TRY AGAIN"))),
-                    Icon(Icons.refresh)
-                  ],),
-                )),
+                    onPressed: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => Register()));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: Center(child: Text("TRY AGAIN"))),
+                          Icon(Icons.refresh)
+                        ],
+                      ),
+                    )),
               )
             ],
           );
@@ -126,7 +144,7 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  void initState(){
+  void initState() {
     checkConnectivity();
     super.initState();
   }
@@ -249,7 +267,6 @@ class _RegisterState extends State<Register> {
                   // label: Text('Enter Your Number'),
                   hintText: "Enter Your Number",
                   counterText: "",
-
                   border: InputBorder.none,
                   fillColor: Colors.black12,
                   filled: true,
@@ -259,114 +276,128 @@ class _RegisterState extends State<Register> {
                 alignment: Alignment.center,
                 child: Container(
                   margin: const EdgeInsets.all(20),
-                  child: loaded ? ElevatedButton(
-                    child: const Text('Sign Up'),
-                    onPressed: () async {
-                      if (isLength(name.text, 1)) {
-                        if (isLength(number.text, 10)) {
-                          if (sDropdown != null) {
-                            // Sign Up the user
-                             setState(() {
-                              loaded = false;
-                            });
+                  child: loaded
+                      ? ElevatedButton(
+                          child: const Text('Sign Up'),
+                          onPressed: () async{
+                            if (isLength(name.text, 1)) {
+                              if (isLength(number.text, 10)) {
+                                if (sDropdown != null) {
+                                  // Sign Up the user
+                                   setState(() {
+                                    loaded = false;
+                                  });
+                                  var dio = Dio();
+                                  var formdata = FormData.fromMap({
+                                    "phone": number.text.toString(),
+                                    "page_type": "register"
+                                  });
+                                  final response =
+                                      await dio.post(sendOTP(), data: formdata);
+                                  var result = response.data;
+                                  var success = result["error"];
+                                  var message = result['message'];
+                                  print(message);
+                                   if(success){
+                                     showDialog(
+                                       context: ctx,
+                                       builder: (context) {
+                                         return AlertDialog(
+                                           title: Text("Error", style: TextStyle(color: Colors.red),),
+                                           content: Text('${message}'),
+                                           actions: [
+                                             TextButton(
+                                                 onPressed: () => Navigator.pop(context),
+                                                 child: Text("OK")),
+                                           ],
+                                         );
+                                       },
+                                     );
+                                   }
+                                   else{
+                                     Navigator.pushAndRemoveUntil(
+                                         context,
+                                         MaterialPageRoute(
+                                             builder: ((context) =>
+                                                 OTPVerificationScreen(
+                                                     mobileNumebr:
+                                                     number.text.toString(),
+                                                     name: name.text.toString(),
+                                                     email: "",
+                                                     companyName: "",
+                                                     otptype: "register",
+                                                     type: sDropdown.toString()
+                                                 ))),
+                                             (route) => false);
 
-                            var dio = Dio();
-                            var formdata = FormData.fromMap({
-                              "phone": number.text.toString(),
-                              "page_type": "register"
-                            });
-                            final response =
-                                await dio.post(sendOTP(), data: formdata);
-                            var result = response.data;
-                            print(result);
-                            setState(() {
-                              loaded = true;
-                            });
-
-                            if(result["error"] != true){
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: ((context) =>
-                                          OTPVerificationScreen(
-                                            mobileNumebr:
-                                                number.text.toString(),
-                                            name: name.text.toString(),
-                                            email: "",
-                                            companyName: "",
-                                            otptype: "register",
-                                            type: sDropdown.toString()
-                                          ))),
-                                  (route) => false);
+                                   }
+                                  setState(() {
+                                    loaded = true;
+                                  });
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Error", style: TextStyle(color: Colors.red),),
+                                        content: Text("Please select a type"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () => Navigator.pop(context),
+                                              child: Text("OK")),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Error", style: TextStyle(color: Colors.red),),
+                                        content: Text("Please enter a 10 digit number"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () => Navigator.pop(context),
+                                              child: Text("OK")),
+                                        ],
+                                      );
+                                    },
+                                  );
+                              }
+                            } else {
+                              showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text("Error", style: TextStyle(color: Colors.red),),
+                                        content: Text("Please enter a name"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () => Navigator.pop(context),
+                                              child: Text("OK")),
+                                        ],
+                                      );
+                                    },
+                                  );
                             }
-                            else{
-
-                            }
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Error", style: TextStyle(color: Colors.red),),
-                                  content: Text("Please select a type"),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text("OK")),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        } else {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Error", style: TextStyle(color: Colors.red),),
-                                  content: Text("Please enter a 10 digit number"),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text("OK")),
-                                  ],
-                                );
-                              },
-                            );
-                        }
-                      } else {
-                        showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text("Error", style: TextStyle(color: Colors.red),),
-                                  content: Text("Please enter a name"),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: Text("OK")),
-                                  ],
-                                );
-                              },
-                            );
-                      }
-
-                      // STM().redirect2page(ctx, const SelectLocation());
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: const Color(0xFF21488c),
-                      padding: const EdgeInsets.all(12),
-                      minimumSize: const Size(150.0, 12.0),
-                    ),
-                  ) : CircularProgressIndicator(),
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: const Color(0xFF21488c),
+                            padding: const EdgeInsets.all(12),
+                            minimumSize: const Size(150.0, 12.0),
+                          ),
+                        )
+                      : CircularProgressIndicator(),
                 ),
               ),
               Center(
                 child: GestureDetector(
                   onTap: () {
                     // STM().redirect2page(ctx, SignIn());
-                    Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => SignIn()));
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => SignIn()));
                   },
                   child: RichText(
                     text: TextSpan(
@@ -390,5 +421,47 @@ class _RegisterState extends State<Register> {
         ),
       ),
     );
+  }
+
+  // api
+   signUp() async {
+    setState(() {
+      loaded = false;
+    });
+    var formdata = FormData.fromMap(
+        {"phone": number.text.toString(), "page_type": "register"});
+    var dio = Dio();
+    final response = await dio.post(sendOTP(), data: formdata);
+    var result = response.data;
+    var success = result["error"];
+    var message = result['message'];
+    setState(() {
+      loaded = true;
+    });
+    if (success) {
+      AlertDialog(
+        title: Text(
+          "Error",
+          style: TextStyle(color: Colors.red),
+        ),
+        content: Text('${message}'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context), child: Text("OK")),
+        ],
+      );
+    } else {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: ((context) => OTPVerificationScreen(
+                  mobileNumebr: number.text.toString(),
+                  name: name.text.toString(),
+                  email: "",
+                  companyName: "",
+                  otptype: "register",
+                  type: sDropdown.toString()))),
+          (route) => false);
+    }
   }
 }

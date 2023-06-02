@@ -3,7 +3,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:quick_room_services/sign_in.dart';
 import 'package:quick_room_services/values/dimens.dart';
 import 'package:quick_room_services/values/styles.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'abouus.dart';
+import 'contact.dart';
 import 'manage/static_method.dart';
 import 'my_hostel.dart';
 import 'values/colors.dart';
@@ -29,9 +33,10 @@ Widget navbar(context, key,owner) {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: Dim().d24),
                 child: Image.asset(
-                  'assets/flash.png',
+                  'assets/logo.png',
                   height: Dim().d160,
-                  fit: BoxFit.contain,
+                  width: Dim().d200,
+                  fit: BoxFit.cover,
                 ),
               ),
               owner == '2' ?  Container(
@@ -70,8 +75,7 @@ Widget navbar(context, key,owner) {
                         fontWeight: FontWeight.w400),
                   ),
                   onTap: () {
-                    // STM().redirect2page(context, MyAddressPage());
-                    // close(key);
+                    STM().openWeb("https://quickroomservice.in/privacy_policy");
                   },
                 ),
               ),
@@ -88,8 +92,7 @@ Widget navbar(context, key,owner) {
                         fontWeight: FontWeight.w400),
                   ),
                   onTap: () {
-                    // STM().redirect2page(context, MyBooking());
-                    // close(key);
+                   STM().openWeb("https://quickroomservice.in/terms_conditions");
                   },
                 ),
               ),
@@ -106,9 +109,8 @@ Widget navbar(context, key,owner) {
                         fontWeight: FontWeight.w400),
                   ),
                   onTap: () {
-                    // STM().redirect2page(context, MyOrders());
-                    // // STM().openWeb('https://magicbuyandsell.com/Arham/privacy_policy');
-                    // close(key);
+                    var message = 'Download The ResiEasy App from below link\n\nhttps://play.google.com/store/apps/details?id=com.app.quick_room_services';
+                    Share.share(message);
                   },
                 ),
               ),
@@ -125,8 +127,8 @@ Widget navbar(context, key,owner) {
                         fontWeight: FontWeight.w400),
                   ),
                   onTap: () {
-                    // STM().redirect2page(context, MyCart());
-                    // STM().openWeb('https://magicbuyandsell.com/Arham/terms_conditions');
+                    STM().redirect2page(context, AboutUs());
+                    close(key);
                   },
                 ),
               ),
@@ -147,6 +149,8 @@ Widget navbar(context, key,owner) {
                     // var message =
                     //     'Download The Arham App from below link\n\n https://play.google.com/store/apps/details?id=org.arhamparivar.arhamparivar';
                     // Share.share(message);
+                    STM().redirect2page(context, ContactUs());
+                    close(key);
                   },
                 ),
               ),
@@ -176,15 +180,19 @@ Widget navbar(context, key,owner) {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(Dim().d12),
-                                      border: Border.all(color: Clr().primaryColor)
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: Dim().d12),
-                                    child: Center(
-                                      child: Text('Cancel',style: Sty().mediumText.copyWith(color: Clr().primaryColor)),
+                                child: InkWell(onTap: (){
+                                  STM().back2Previous(context);
+                                },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(Dim().d12),
+                                        border: Border.all(color: Clr().primaryColor)
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(vertical: Dim().d12),
+                                      child: Center(
+                                        child: Text('Cancel',style: Sty().mediumText.copyWith(color: Clr().primaryColor)),
+                                      ),
                                     ),
                                   ),
                                 ),

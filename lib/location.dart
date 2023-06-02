@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:quick_room_services/home.dart';
 import 'package:quick_room_services/manage/static_method.dart';
@@ -72,7 +73,9 @@ class SelectLocationWidget extends State {
   }
 
   void initState(){
+    Geolocator.requestPermission();
     getLocations();
+    super.initState();
   }
 
   @override
@@ -98,7 +101,7 @@ class SelectLocationWidget extends State {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               InkWell(onTap: (){
-                getLocation();
+                permissionHandle();
               },
                 child: Container(
                   height: Dim().d52,
@@ -157,14 +160,30 @@ class SelectLocationWidget extends State {
     );
   }
 
+  Future<void> permissionHandle() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
+      getLocation();
+    }
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.deniedForever) {
+      STM().displayToast('Location permission is required');
+      await Geolocator.openAppSettings();
+    }
+  }
 
   // getLocation
   getLocation() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
+    LocationPermission permission = await Geolocator.requestPermission();
     dialog = STM().loadingDialog(ctx, 'Fetch location');
     dialog!.show();
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((Position position) {
-      setState(() {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high).then((Position position)  {
+      setState(()  {
         STM().displayToast('Current location is selected');
         sp.setString('lat', position.latitude.toString());
         sp.setString('lng', position.longitude.toString());
@@ -176,6 +195,5 @@ class SelectLocationWidget extends State {
       dialog!.dismiss();
     });
   }
-
 
 }

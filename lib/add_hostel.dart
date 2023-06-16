@@ -567,9 +567,8 @@ class AddPage extends State<Add> {
     MultiImageCrop.startCropping(
         context: context,
         alwaysShowGrid: true,
-        aspectRatio: 8/8,
         activeColor: Colors.amber,
-        pixelRatio: 18.0,
+        pixelRatio: 3,
         files: List.generate(
             receivedFiles!.length, (index) => File(receivedFiles![index].path)),
         callBack: (List<File> images) {
@@ -581,7 +580,7 @@ class AddPage extends State<Add> {
             });
           }
           print(croppedFiles.length);
-        });
+        }, aspectRatio: 16/9);
   }
 
 

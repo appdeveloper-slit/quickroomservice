@@ -223,7 +223,7 @@ class STM {
     );
     return dialog;
   }
-
+  //Dialer
   void alertDialog(context, message, widget) {
     showDialog(
       context: context,

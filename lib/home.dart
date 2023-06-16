@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -30,7 +31,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-enum GenderType { boy, girl }
+enum GenderType {boyshostel, girlshostel,all,flat,girlsroom,boysroom}
 
 enum PriceType { lowtohigh, hightolow }
 
@@ -81,6 +82,7 @@ class _HomeState extends State<Home> {
       'latitude': sp.getString('lat').toString(),
       'longitude': sp.getString('lng').toString(),
     });
+
     var response = await dio.post(viewAllHostelsUrl(), data: formData);
     var res = response.data;
     print(res);
@@ -103,6 +105,9 @@ class _HomeState extends State<Home> {
       imageList = imageList;
       resultList = res['hostel'];
       FillterList = resultList;
+      print(sp.getString('location_id').toString());
+      print(sp.getString('lat').toString());
+      print(sp.getString('lng').toString());
     } else {
       showDialog(
         context: context,
@@ -255,7 +260,6 @@ class _HomeState extends State<Home> {
         drawer: navbar(ctx, scaffoldState, owner_type),
         key: scaffoldState,
         appBar: AppBar(
-          centerTitle: true,
           backgroundColor: Color(0xff21488c),
           leading: InkWell(
             onTap: () {
@@ -271,7 +275,7 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          title: Image.asset('assets/logo.png', height: Dim().d56,width: Dim().d80,fit: BoxFit.fitWidth),
+          title: Image.asset('assets/resifinal.png', height: Dim().d56,width: Dim().d100,fit: BoxFit.fitHeight,alignment: Alignment.centerLeft),
           // Wrap(
           //   children: [
           //     Text(
@@ -309,9 +313,10 @@ class _HomeState extends State<Home> {
                         setLocation.isNotEmpty
                             ? setLocation.toString() + " "
                             : city.toString(),
-                        overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.fade,
                         style: Sty().mediumText.copyWith(
                               color: Colors.white,
+                              fontSize: Dim().d12,
                               fontWeight: FontWeight.w400,
                             ),
                       ),
@@ -399,9 +404,7 @@ class _HomeState extends State<Home> {
                       //     ),
                       //   ],
                       // ),
-                      owner_type == "2"
-                          ? Container()
-                          : Row(
+                      Row(
                               children: [
                                 Expanded(
                                   child: Material(
@@ -553,20 +556,20 @@ class _HomeState extends State<Home> {
                               ? GridView.builder(
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
-                                    mainAxisExtent: 225,
+                                    crossAxisSpacing: Dim().d12,
+                                    mainAxisSpacing: Dim().d12,
+                                    childAspectRatio: 5/8
                                   ),
                                   // itemCount: resultList.length,
                                   itemCount: FillterList.length,
                                   itemBuilder: (context, index) {
-                                    return itemLayout(
-                                        context, index, FillterList);
+                                    return itemLayout(context, index, FillterList);
                                   },
                                 )
                               : Container(
-                                  margin: EdgeInsets.only(top: 150),
+                                  margin: EdgeInsets.only(top: Dim().d150),
                                   child: Center(
                                       child: Text("No Data Found",
                                           style: TextStyle(
@@ -610,14 +613,16 @@ class _HomeState extends State<Home> {
                 lat: list[index]['latitude'].toString(),
                 long: list[index]['longitude'].toString()));
       },
-      child: Card(
-        margin: const EdgeInsets.all(4),
-        child: Column(
+      child: Container(
+        color: Clr().white,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             list[index]['image_path'] != null
                 ? CachedNetworkImage(
                     imageUrl: list[index]['image_path'].toString(),
-                    height: 130,
+                    height: Dim().d120,
+                    width: double.infinity,
+                    fit: BoxFit.fill,
                     placeholder: (context, url) => Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [CircularProgressIndicator()]),
@@ -626,45 +631,110 @@ class _HomeState extends State<Home> {
                     Icons.broken_image,
                     size: 130,
                   ),
+            SizedBox(
+              height: Dim().d8,
+            ),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+                child: Text(
+                  list[index]['name'].toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Sty().mediumText.copyWith(
+                        fontSize: Dim().d14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding:  EdgeInsets.symmetric(horizontal: Dim().d12),
+                child: Text(
+                  list[index]["hostel_type"].toString() +
+                      '  \u20b9' +
+                      list[index]['monthly_charge'].toString() +
+                      '/month',
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: Sty().mediumText.copyWith(
+                        fontSize: Dim().d12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding:  EdgeInsets.symmetric(horizontal: Dim().d12),
+                child: Text(
+                  list[index]['address'],
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: Sty().mediumText.copyWith(
+                        fontSize: Dim().d12,
+                        fontWeight: FontWeight.w300,
+                      ),
+                ),
+              ),
+            ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dim().d8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    height: 7,
+                    width: Dim().d56,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: RatingBar.builder(
+                              initialRating: 1,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              ignoreGestures: true,
+                              allowHalfRating: true,
+                              itemCount: 1,
+                              itemSize:  11.00,
+                              unratedColor: Clr().grey,
+                              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                              itemBuilder: (context, _) => const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rate) {
+                                // print(rating);
+                                // setState(() {
+                                //   rating = rate;
+                                // });
+                              },
+                            ),
+                          ),
+                          Text('${list[index]['review_avg_rating'].toString()}',style: Sty().mediumText.copyWith(fontSize: 11.00,fontWeight: FontWeight.w500))
+                        ],
+                      ),
+                    ),
                   ),
-                  Text(
-                    list[index]['name'].toString(),
-                    textAlign: TextAlign.left,
-                    style: Sty().mediumText.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                  Text(
-                    list[index]["hostel_type"].toString() +
-                        '  \u20b9' +
-                        list[index]['monthly_charge'].toString() +
-                        '/month',
-                    textAlign: TextAlign.start,
-                    style: Sty().mediumText.copyWith(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                  Text(
-                    list[index]['address'],
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Sty().mediumText.copyWith(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  )
+                  SizedBox(width: Dim().d72,child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('${list[index]['review_count'].toString()}',style: Sty().mediumText.copyWith(fontWeight: FontWeight.w500,fontSize:  11.00)),
+                        Text('Reviews',style: Sty().mediumText.copyWith(fontSize: 11.00,fontWeight: FontWeight.w500))
+                      ],
+                    ),
+                  )),
                 ],
               ),
             ),
+            SizedBox(height: Dim().d12),
           ],
         ),
       ),
@@ -693,7 +763,7 @@ class _HomeState extends State<Home> {
   void getSearchList(key, type) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     FormData body = FormData.fromMap({
-      key: type,
+       key: type,
       'location_id': sp.getString('location_id').toString(),
       'latitude': sp.getString('lat').toString(),
       'longitude': sp.getString('lng').toString(),
@@ -723,27 +793,82 @@ class _HomeState extends State<Home> {
             title: Text('Choose', style: Sty().mediumBoldText),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ListTile(
-                  title: const Text('Boy'),
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text("Boys hostel"),
+                  visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                   leading: Radio<GenderType>(
-                    value: GenderType.boy,
+                    value: GenderType.boyshostel,
                     groupValue: null,
                     onChanged: (GenderType? value) {
-                      getSearchList('hostel_type', 'boy');
+                      getSearchList('hostel_type', 'boyshostel');
                       STM().back2Previous(ctx);
                     },
                   ),
                 ),
                 ListTile(
-                  title: const Text('Girl'),
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Girls hostel'),
+                  visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                   leading: Radio<GenderType>(
-                    value: GenderType.girl,
+                    value: GenderType.girlshostel,
                     groupValue: null,
                     onChanged: (GenderType? value) {
-                      getSearchList('hostel_type', 'girl');
+                      getSearchList('hostel_type', 'girlshostel');
+                      STM().back2Previous(ctx);
+                    },
+                  ),
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Boys room'),
+                  visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                  leading: Radio<GenderType>(
+                    value: GenderType.boysroom,
+                    groupValue: null,
+                    onChanged: (GenderType? value) {
+                      getSearchList('hostel_type', 'boysroom');
+                      STM().back2Previous(ctx);
+                    },
+                  ),
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Girls room'),
+                  visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                  leading: Radio<GenderType>(
+                    value: GenderType.girlsroom,
+                    groupValue: null,
+                    onChanged: (GenderType? value) {
+                      getSearchList('hostel_type', 'girlsroom');
+                      STM().back2Previous(ctx);
+                    },
+                  ),
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Flat'),
+                  visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                  leading: Radio<GenderType>(
+                    value: GenderType.flat,
+                    groupValue: null,
+                    onChanged: (GenderType? value) {
+                      getSearchList('hostel_type', 'flat');
+                      STM().back2Previous(ctx);
+                    },
+                  ),
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('All'),
+                  visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                  leading: Radio<GenderType>(
+                    value: GenderType.all,
+                    groupValue: null,
+                    onChanged: (GenderType? value) {
+                      getSearchList('hostel_type', 'all');
                       STM().back2Previous(ctx);
                     },
                   ),
@@ -792,4 +917,15 @@ class _HomeState extends State<Home> {
           );
         });
   }
+  double reciprocal(double d) => 1 / d;
+  // // get Review
+  // void getReview() async {
+  //   FormData body = FormData.fromMap({
+  //     'hostel_id': hostel_id.toString(),
+  //   });
+  //   var result = await STM().post(ctx, Str().loading, 'show_review', body);
+  //   setState(() {
+  //     averageRate = result['review_avg'];
+  //   });
+  // }
 }

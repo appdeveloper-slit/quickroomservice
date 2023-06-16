@@ -145,7 +145,7 @@ void addReview() async {
     var success = result['success'];
     var message = result['message'];
     if(success){
-      STM().successDialog(ctx, message, ReviewPage(hostelId: widget.hostelid));
+      STM().successDialogWithReplace(ctx, message, ReviewPage(hostelId: widget.hostelid));
     }else{
       STM().errorDialog(ctx, message);
     }

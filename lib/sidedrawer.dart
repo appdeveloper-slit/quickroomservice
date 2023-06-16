@@ -27,17 +27,12 @@ Widget navbar(context, key,owner) {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                height: Dim().d44,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: Dim().d24),
-                child: Image.asset(
-                  'assets/logo.png',
-                  height: Dim().d160,
-                  width: Dim().d200,
-                  fit: BoxFit.cover,
-                ),
+              SizedBox(height: Dim().d2),
+              Image.asset(
+                'assets/logo.png',
+                height: Dim().d250,
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
               owner == '2' ?  Container(
                 margin: const EdgeInsets.only(right: 20, left: 20),

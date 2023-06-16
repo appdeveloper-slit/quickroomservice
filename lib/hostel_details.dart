@@ -182,7 +182,7 @@ class _DetailsState extends State<Details> {
   void initState() {
     // TODO: implement initState
     getHostel();
-    Future.delayed(Duration.zero,(){
+    Future.delayed(Duration.zero, () {
       getReview();
     });
     super.initState();
@@ -244,23 +244,8 @@ class _DetailsState extends State<Details> {
                   .toList(),
             ),
             SizedBox(
-              height: 8,
+              height: Dim().d8,
             ),
-            // Wrap(
-            //   children: imageList.asMap().entries.map((entry) {
-            //     return Container(
-            //       width: 8,
-            //       height: 8,
-            //       margin: const EdgeInsets.symmetric(
-            //         horizontal: 2,
-            //       ),
-            //       decoration: BoxDecoration(
-            //         shape: BoxShape.circle,
-            //         color: Clr().primaryColor
-            //       ),
-            //     );
-            //   }).toList(),
-            // ),
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -280,621 +265,380 @@ class _DetailsState extends State<Details> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${hostelName}', style: Sty().mediumBoldText),
+                    Text('${hostelName}',
+                        style: Sty().mediumBoldText.copyWith(
+                            fontWeight: FontWeight.w500, fontSize: Dim().d16)),
                     SizedBox(height: Dim().d12),
                     Row(
                       children: [
                         SvgPicture.asset('assets/location.svg',
-                            height: Dim().d20, color: Clr().primaryColor),
+                            height: Dim().d16, color: Clr().primaryColor),
                         SizedBox(width: Dim().d12),
                         Expanded(
                             child: Text('${hostelAddress}',
-                                style: Sty().mediumText,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis)),
+                                style: Sty().mediumText.copyWith(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: Dim().d12))),
                       ],
-                    )
+                    ),
+                    SizedBox(height: Dim().d8),
+                    InkWell(
+                      onTap: () {
+                        STM().redirect2page(
+                            ctx,
+                            ReviewPage(
+                              hostelId: hostel_id.toString(),
+                            ));
+                      },
+                      child: Row(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: RatingBar.builder(
+                              initialRating: averageRate,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              ignoreGestures: true,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemSize: Dim().d16,
+                              unratedColor: Color(0xff7F7A7A),
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 4.0),
+                              itemBuilder: (context, _) => const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rate) {
+                                print(rating);
+                                setState(() {
+                                  rating = rate;
+                                });
+                              },
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: RichText(
+                                text: TextSpan(children: [
+                              WidgetSpan(
+                                  child: InkWell(
+                                      onTap: () {
+                                        STM().redirect2page(
+                                            ctx,
+                                            ReviewPage(
+                                              hostelId: hostel_id.toString(),
+                                            ));
+                                      },
+                                      child: Text(
+                                        ' ${averageRate}',
+                                        style: Sty().smallText.copyWith(
+                                            color: Color(0xff21488C),
+                                            fontSize: Dim().d12),
+                                      ))),
+                              TextSpan(
+                                  text: '+ratings',
+                                  style: Sty().smallText.copyWith(
+                                      color: Color(0xff21488C),
+                                      fontSize: Dim().d8)),
+                            ])),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
             SizedBox(height: Dim().d8),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: RatingBar.builder(
-                initialRating: averageRate,
-                minRating: 1,
-                direction: Axis.horizontal,
-                ignoreGestures: true,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemSize: Dim().d28,
-                unratedColor: Color(0xff7F7A7A),
-                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star,
-                  color: Colors.amber,
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: Clr().white,
+                  borderRadius: BorderRadius.circular(Dim().d12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Clr().grey.withOpacity(0.4),
+                      spreadRadius: 0.5,
+                      blurRadius: 5.0,
+                      offset: Offset(0, 4),
+                    )
+                  ]),
+              child: Padding(
+                padding: EdgeInsets.all(Dim().d16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hostel Name / Building Name',
+                      style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                    ),
+                    SizedBox(height: Dim().d4),
+                    SelectableText(
+                      hostelName,
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                    ),
+                    SizedBox(height: Dim().d8),
+                    Text(
+                      'Hostel Address',
+                      style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4),
+                      child: SelectableText(
+                        hostelAddress,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ],
                 ),
-                onRatingUpdate: (rate) {
-                  print(rating);
-                  setState(() {
-                    rating = rate;
-                  });
-                },
               ),
             ),
-            SizedBox(height: Dim().d4),
-            InkWell(onTap: (){
-              STM().redirect2page(ctx, ReviewPage(hostelId: hostel_id.toString(),));
-            },
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(' ${averageRate} + ratings',
+            SizedBox(height: Dim().d8),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: Clr().white,
+                  borderRadius: BorderRadius.circular(Dim().d12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Clr().grey.withOpacity(0.4),
+                      spreadRadius: 0.5,
+                      blurRadius: 5.0,
+                      offset: Offset(0, 4),
+                    )
+                  ]),
+              child: Padding(
+                padding: EdgeInsets.all(Dim().d16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Owner Name',
                       style: Sty().mediumText.copyWith(
-                            color: Color(0xff21488C),
-                            fontWeight: FontWeight.w500,
-                          ))),
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                        ownerName,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    Text(
+                      'Owner Number',
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                        ownerNumber,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    Text(
+                      'Whatsapp Number',
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                        alternateNumber,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    Text(
+                      'Owner Email',
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                        ownerEmail,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
             SizedBox(height: Dim().d8),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: Clr().white,
+                  borderRadius: BorderRadius.circular(Dim().d12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Clr().grey.withOpacity(0.4),
+                      spreadRadius: 0.5,
+                      blurRadius: 5.0,
+                      offset: Offset(0, 4),
+                    )
+                  ]),
+              child: Padding(
+                padding: EdgeInsets.all(Dim().d16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hostel Telephone Number',
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                        hostelTelephoneNumber,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    Text(
+                      'Hostel Type',
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                        hostelType,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    Text(
+                      'Vacancy Count Available',
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                        vacancyCountAvailable,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    Text(
+                      'Extra Charges',
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                        extraCharges,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    !(gateClosingTime == "00:00:00")
+                        ? Text(
+                            'Gate Closing Time',
+                            style: Sty().mediumText.copyWith(
+                                fontSize: Dim().d16,
+                                fontWeight: FontWeight.w400),
+                          )
+                        : Text(
+                            'Gate Closing Time',
+                            style: Sty().mediumText.copyWith(
+                                fontSize: Dim().d16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                    !(gateClosingTime == "00:00:00")
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                                top: Dim().d4, bottom: Dim().d8),
+                            child: SelectableText(
+                              gateClosingTime,
+                              style: Sty().mediumText.copyWith(
+                                  fontSize: Dim().d12,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          )
+                        : Padding(
+                            padding: EdgeInsets.only(
+                                top: Dim().d4, bottom: Dim().d8),
+                            child: Text(
+                              "No gate closing time",
+                              style: Sty().mediumText.copyWith(
+                                  fontSize: Dim().d12,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                    Text(
+                      'Monthly Charges',
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                          '\u20b9' + monthly_charge,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    Text(
+                      'Facility',
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                        facility,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    Text(
+                      'Conditions',
+                      style: Sty().mediumText.copyWith(
+                          fontSize: Dim().d16, fontWeight: FontWeight.w400),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: Dim().d4, bottom: Dim().d8),
+                      child: SelectableText(
+                        conditions,
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20),
-                Text(
-                  'Hostel Name / Building Name',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: Dim().d12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    hostelName,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                // Text('Hostel Name / Building Name',
-                //   // textAlign: TextAlign.left,
-                //   style: Sty().mediumText.copyWith(
-                //     fontSize: 18,
-                //   )
-                // ),
-                //
-                // SizedBox(height: 12,),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: 'Lorem Ipsum is simply dummy text',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Hostel Address',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    hostelAddress,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                // SizedBox(height: 20),
-                // Text('Hostel Address',
-                //     style: Sty().mediumText.copyWith(
-                //       fontSize: 18,
-                //     )
-                // ),
-                // SizedBox(height: 12),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: 'Lorem Ipsum is simply dummy text',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Owner Name',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    ownerName,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Owner Number',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    ownerNumber,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                //
-                // SizedBox(height: 20),
-                // Text('Owner Number',
-                //   style: Sty().mediumText.copyWith(
-                //     fontSize: 18,
-                //   ),),
-                // SizedBox(height: 12),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: '9898989898',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Whatsapp Number',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    alternateNumber,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                // SizedBox(height: 20),
-                // Text('Alternate Number',
-                //   style: Sty().mediumText.copyWith(
-                //     fontSize: 18,
-                //   ),),
-                // SizedBox(height: 12),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: '9898989898',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Owner Email',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    ownerEmail,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                // SizedBox(height: 20),
-                // Text('Owner Email',
-                //   style: Sty().mediumText.copyWith(
-                //     fontSize: 18,
-                //   ),),
-                // SizedBox(height: 12),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: 'johndoe@gmail.com',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Hostel Telephone Number',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    hostelTelephoneNumber,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                // SizedBox(height: 20),
-                // Text('Hostel Telephone Number',
-                //   style: Sty().mediumText.copyWith(
-                //     fontSize: 18,
-                //   ),),
-                // SizedBox(height: 12),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: '2589631563',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Hostel Type',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    hostelType,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                // SizedBox(height: 20),
-                // Text('Hostel type',
-                //   style: Sty().mediumText.copyWith(
-                //     fontSize: 18,
-                //   ),),
-                // SizedBox(height: 12),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: 'Girls',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Vacancy Count Available',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    vacancyCountAvailable,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                // SizedBox(height: 20),
-                // Text('Vacancy Count Available',
-                //   style: Sty().mediumText.copyWith(
-                //     fontSize: 18,
-                //   ),),
-                // SizedBox(height: 12),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: '9898989898',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Extra Charges',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    extraCharges,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                // SizedBox(height: 20),
-                // Text('Extra Charges',
-                //   style: Sty().mediumText.copyWith(
-                //     fontSize: 18,
-                //   ),),
-                // SizedBox(height: 12),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: 'No',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-
-                SizedBox(height: 20),
-                !(gateClosingTime == "00:00:00")
-                    ? Text(
-                        'Gate Closing Time',
-                        style: Sty().mediumText.copyWith(
-                              fontSize: 18,
-                            ),
-                      )
-                    : Text(
-                        'Gate Closing Time',
-                        style: Sty().mediumText.copyWith(
-                              fontSize: 18,
-                            ),
-                      ),
-                SizedBox(height: 12),
-                !(gateClosingTime == "00:00:00")
-                    ? Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(12),
-                        color: Colors.black12,
-                        child: SelectableText(
-                          gateClosingTime,
-                          style: Sty()
-                              .mediumText
-                              .copyWith(fontSize: 16, color: Colors.black54),
-                        ),
-                      )
-                    : Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(12),
-                        color: Colors.black12,
-                        child: Text(
-                          "No gate closing time",
-                          style: Sty()
-                              .mediumText
-                              .copyWith(fontSize: 16, color: Colors.black54),
-                        ),
-                      ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Monthly Charges',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    '\u20b9' + monthly_charge,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-
-                // SizedBox(height: 20),
-                // Text('Gate Closing Time',
-                //   style: Sty().mediumText.copyWith(
-                //     fontSize: 18,
-                //   ),),
-                // SizedBox(height: 12),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: 'No Limit',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-
-                SizedBox(height: 20),
-                Text(
-                  'Facility',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    facility,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  'Conditions',
-                  style: Sty().mediumText.copyWith(
-                        fontSize: 18,
-                      ),
-                ),
-                SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Colors.black12,
-                  child: SelectableText(
-                    conditions,
-                    style: Sty()
-                        .mediumText
-                        .copyWith(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-                SizedBox(height: Dim().d16),
-
-                // SizedBox(height: 20),
-                // Text('Conditions',
-                //   style: Sty().mediumText.copyWith(
-                //     fontSize: 18,
-                //   ),),
-                // SizedBox(height: 12),
-                // TextFormField(
-                //   decoration: InputDecoration(
-                //     contentPadding: EdgeInsets.all(10),
-                //     // label: Text('Hostel Name / Building Name'),
-                //     hintText: 'Lorem Ipsum is simply dummy text of the',
-                //     border: InputBorder.none,
-                //     fillColor: Colors.black12,
-                //     filled: true,
-                //   ),
-                // ),
-                // Padding(
-                //   padding: EdgeInsets.only(top: 20),
-                //   child: Row(
-                //     children: [
-                //       SizedBox(
-                //         height: 50,
-                //         width: double.infinity,
-                //         child: ElevatedButton(
-                //           onPressed: () async {
-                //             var url = "tel:" + ownerNumber.toString();
-                //             if (await canLaunchUrlString(url)) {
-                //               await launchUrlString(url);
-                //             } else {
-                //               throw 'Could not launch $url';
-                //             }
-                //           },
-                //           style: Sty().primaryButton,
-                //           child: Row(
-                //             children: [
-                //               SvgPicture.asset('assets/calldetails.svg',height: Dim().d24),
-                //               SizedBox(width: Dim().d12),
-                //               Text(
-                //                 'Contact Owner',
-                //                 style: Sty()
-                //                     .mediumText
-                //                     .copyWith(color: Colors.white),
-                //               ),
-                //             ],
-                //           ),
-                //         ),
-                //       ),
-                //       SizedBox(width:10, height: 10,),
-                //       // SizedBox(
-                //       //   height: 50,
-                //       //   width: 150,
-                //       //   child: ElevatedButton(
-                //       //     style: Sty().primaryButton,
-                //           onPressed: () async {
-                //
-                //             // String googleUrl = 'https://www.google.com/maps/@$lat,$long,18.25z';
-                //             // String googleUrl = 'google.navigation:q=$lat,$long&mode=d';
-                //             //  String googleUrl = 'http://maps.google.com/maps?saddr=$lat&daddr=$long';
-                //             String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$lat,$long';
-                //             if (await canLaunchUrlString(googleUrl)) {
-                //               await launchUrlString(googleUrl, mode: LaunchMode.externalApplication);
-                //             } else {
-                //               throw 'Could not open the map.';
-                //             }
-                //           },
-                //       //     child: Text(
-                //       //       'View On Map',
-                //       //       style: Sty().mediumText.copyWith(
-                //       //             color: Colors.white,
-                //       //           ),
-                //       //     ),
-                //       //   ),
-                //       // )
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: Dim().d12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(onTap: ()async{
-                     await launch("whatsapp://send?phone=${alternateNumber.toString()}");
-                    },
+                    InkWell(
+                      onTap: () async {
+                        await launch("whatsapp://send?phone=${alternateNumber.toString()}");
+                        // STM().openWhatsApp(alternateNumber.toString());
+                        // await launch(
+                        //     "whatsapp://send?phone=${alternateNumber.toString()}");
+                      },
                       child: Row(
                         children: [
                           SvgPicture.asset('assets/whatsapp.svg',
@@ -908,17 +652,17 @@ class _DetailsState extends State<Details> {
                       ),
                     ),
                     SizedBox(width: Dim().d24),
-
                     InkWell(
                       onTap: () async {
-                        String googleUrl =
-                            'https://www.google.com/maps/search/?api=1&query=$lat,$long';
-                        if (await canLaunchUrlString(googleUrl)) {
-                          await launchUrlString(googleUrl,
-                              mode: LaunchMode.externalApplication);
-                        } else {
-                          throw 'Could not open the map.';
-                        }
+                        launchUrl(Uri.parse('https://www.google.com/maps/search/?api=1&query=$lat,$long') ,mode:LaunchMode.externalApplication);
+                        // String googleUrl =
+                        //     'https://www.google.com/maps/search/?api=1&query=$lat,$long';
+                        // if (await canLaunchUrlString(googleUrl)) {
+                        //   await launchUrlString(googleUrl,
+                        //       mode: LaunchMode.externalApplication);
+                        // } else {
+                        //   throw 'Could not open the map.';
+                        // }
                       },
                       child: Row(
                         children: [
@@ -939,12 +683,13 @@ class _DetailsState extends State<Details> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      var url = "tel:" + ownerNumber.toString();
-                      if (await canLaunchUrlString(url)) {
-                        await launchUrlString(url);
-                      } else {
-                        throw 'Could not launch $url';
-                      }
+                      STM().openDialer(ownerNumber.toString());
+                      // var url = "tel:" + ownerNumber.toString();
+                      // if (await canLaunchUrlString(url)) {
+                      //   await launchUrlString(url);
+                      // } else {
+                      //   throw 'Could not launch $url';
+                      // }
                     },
                     style: Sty().primaryButton,
                     child: Row(
@@ -979,5 +724,4 @@ class _DetailsState extends State<Details> {
       averageRate = result['review_avg'];
     });
   }
-
 }

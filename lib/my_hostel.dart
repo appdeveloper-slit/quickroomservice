@@ -8,6 +8,7 @@ import 'package:quick_room_services/manage/static_method.dart';
 import 'package:quick_room_services/sign_in.dart';
 import 'package:quick_room_services/values/dimens.dart';
 import 'package:quick_room_services/values/global_urls.dart';
+import 'package:quick_room_services/values/strings.dart';
 import 'package:quick_room_services/values/styles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -32,6 +33,8 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
   var leadResultList = [];
   bool loaded = true;
   int initialIndex = 0;
+  var status;
+
   void getHostelsAndLeads() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     // sp.getString('location_id').toString();
@@ -103,16 +106,17 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
           children: [
             loaded
                 ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: Dim().d20),
+                    padding: EdgeInsets.symmetric(horizontal: Dim().d12),
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border(bottom: BorderSide(color: Clr().grey))
-                      ),
+                          border:
+                              Border(bottom: BorderSide(color: Clr().grey))),
                       child: TabBar(
-                          unselectedLabelColor: Color(0xff21488C).withOpacity(0.5),
+                          unselectedLabelColor:
+                              Color(0xff21488C).withOpacity(0.5),
                           labelColor: Color(0xff21488C),
                           unselectedLabelStyle: TextStyle(color: Clr().grey),
-                          onTap: (value){
+                          onTap: (value) {
                             setState(() {
                               initialIndex = value;
                             });
@@ -129,8 +133,8 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
             loaded
                 ? Expanded(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: Dim().d20),
-                      child: TabBarView(children: [
+                    padding: EdgeInsets.symmetric(horizontal: Dim().d12),
+                    child: TabBarView(children: [
                       resultList.length > 0
                           ? ListView.builder(
                               shrinkWrap: true,
@@ -143,7 +147,8 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                           : Center(
                               child: Text(
                                 "No Data Found",
-                                style: TextStyle(color: Clr().blue, fontSize: 24),
+                                style:
+                                    TextStyle(color: Clr().blue, fontSize: 24),
                               ),
                             ),
                       leadResultList.length > 0
@@ -152,17 +157,19 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                               // itemCount: resultList.length,
                               itemCount: leadResultList.length,
                               itemBuilder: (context, index) {
-                                return itemLeadLayout(ctx, index, leadResultList);
+                                return itemLeadLayout(
+                                    ctx, index, leadResultList);
                               },
                             )
                           : Center(
                               child: Text(
                                 "No Data Found",
-                                style: TextStyle(color: Clr().blue, fontSize: 24),
+                                style:
+                                    TextStyle(color: Clr().blue, fontSize: 24),
                               ),
                             )
-                  ]),
-                    ))
+                    ]),
+                  ))
                 : Expanded(
                     child: Column(
                     children: [
@@ -187,9 +194,10 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Expanded(
-                                child: InkWell(onTap:(){
-                                  STM().back2Previous(ctx);
-                                },
+                                child: InkWell(
+                                  onTap: () {
+                                    STM().back2Previous(ctx);
+                                  },
                                   child: Container(
                                     decoration: BoxDecoration(
                                         borderRadius:
@@ -334,23 +342,28 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                       Text(
                         list[index]['name'],
                         style: Sty().mediumText.copyWith(
-                              fontSize: 18,
+                              fontSize: Dim().d14,
                             ),
                       ),
                       SizedBox(height: Dim().d4),
                       Text(
                         list[index]['hostel_type'],
                         style: Sty().mediumText.copyWith(
-                              fontSize: Dim().d16,
+                              fontSize: Dim().d12,
                             ),
                       ),
                       SizedBox(height: Dim().d4),
-                      Text(
-                        list[index]['address'],
-                        maxLines: 2,
-                        style: Sty().mediumText.copyWith(
-                              fontSize: 14,
-                            ),
+                      SizedBox(
+                        width: Dim().d100,
+                        child: Text(
+                          list[index]['address'],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Sty().mediumText.copyWith(
+                                fontWeight: FontWeight.w300,
+                                fontSize: Dim().d12,
+                              ),
+                        ),
                       ),
                       SizedBox(height: Dim().d4),
                       // list[index]['status'] != 0
@@ -369,14 +382,14 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                       //         ),
                       //       ),
                       Text(
-                        "Views: ${list[index]['count'] ?? 0}",
-                        style: Sty().mediumText.copyWith(fontSize: Dim().d14),
+                        "PerDayCount: ${list[index]['perDayCount'] ?? 0}",
+                        style: Sty().mediumText.copyWith(
+                            fontSize: Dim().d12, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
                       onTap: () {
@@ -384,9 +397,7 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                       },
                       child: SvgPicture.asset('assets/delete.svg'),
                     ),
-                    SizedBox(
-                      height: Dim().d16,
-                    ),
+                    SizedBox(height: Dim().d8),
                     if (list[index]['status'] != 0)
                       InkWell(
                         onTap: () {
@@ -395,6 +406,22 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
                         },
                         child: Icon(Icons.edit_outlined),
                       ),
+                    SizedBox(height: Dim().d8),
+                    TextButton(
+                        onPressed: () {
+                          changeHostelStatus(list[index]['id']);
+                        },
+                        child: Text(
+                          list[index]['hostel_status'] == 1
+                              ? 'Active'
+                              : 'Inactive',
+                          style: Sty().mediumText.copyWith(
+                              fontSize: Dim().d12,
+                              fontWeight: FontWeight.w600,
+                              color: list[index]['hostel_status'] == 1
+                                  ? Clr().successGreen
+                                  : Clr().errorRed),
+                        )),
                   ],
                 )
               ],
@@ -412,7 +439,8 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
         margin: EdgeInsets.all(Dim().d8),
         child: Padding(
           padding: EdgeInsets.all(Dim().d12),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                   child: Column(
@@ -443,17 +471,19 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
               )),
               Container(
                 height: Dim().d100,
-                child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(list[index]['created_at'].toString()),
                     InkWell(
                         onTap: () async {
-                          var url = "tel:" + list[index]['phone'].toString();
-                          if (await canLaunchUrlString(url)) {
-                            await launchUrlString(url);
-                          } else {
-                            throw 'Could not launch $url';
-                          }
+                          STM().openDialer('${list[index]['phone'].toString()}');
+                          // var url = "tel:" + list[index]['phone'].toString();
+                          // if (await canLaunchUrlString(url)) {
+                          //   await launchUrlString(url);
+                          // } else {
+                          //   throw 'Could not launch $url';
+                          // }
                         },
                         child: SvgPicture.asset('assets/call.svg')),
                   ],
@@ -484,5 +514,19 @@ class MyHostelWidget extends State with SingleTickerProviderStateMixin {
         getHostelsAndLeads();
       },
     )..show();
+  }
+
+  void changeHostelStatus(id) async {
+    FormData body = FormData.fromMap({
+      'hostel_id': id,
+    });
+    var result = await STM().post(ctx, Str().processing,  'update_status', body);
+    var success = result['success'];
+    var message = result['message'];
+    if (success) {
+      getHostelsAndLeads();
+    } else {
+      STM().errorDialog(ctx, message);
+    }
   }
 }

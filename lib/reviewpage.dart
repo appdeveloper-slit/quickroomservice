@@ -26,6 +26,8 @@ class _ReviewPageState extends State<ReviewPage> {
   String owner_type = "";
   List<dynamic> reviewList = [];
   var averageRate;
+  int? ownerID;
+
   getSession() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     setState(() {
@@ -236,7 +238,7 @@ class _ReviewPageState extends State<ReviewPage> {
                         Expanded(
                           child: Text(
                             '${reviewList[index]['user']['name']}',
-                            style: Sty().largeText,
+                            style: Sty().mediumBoldText.copyWith(fontWeight: FontWeight.w500),
                           ),
                         ),
                         RatingBar.builder(
@@ -264,8 +266,10 @@ class _ReviewPageState extends State<ReviewPage> {
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Expanded(child: Text('${reviewList[index]['review'].toString()}', style: Sty().mediumText)),
-                         reviewList[index]['user_id'] == int.parse(userId.toString()) ? InkWell(onTap: (){
+                        Expanded(child: Text('${reviewList[index]['review'].toString()}', style: Sty().mediumText.copyWith(fontWeight: FontWeight.w300,fontSize: Dim().d14))),
+                        ownerID == int.parse(userId.toString()) ?  InkWell(onTap: (){
+                          deleteReview(reviewList[index]['id']);
+                        },child: Icon(Icons.delete,color: Clr().primaryColor,size: 20.00,)) : reviewList[index]['user_id'] == int.parse(userId.toString()) ?  InkWell(onTap: (){
                           deleteReview(reviewList[index]['id']);
                         },child: Icon(Icons.delete,color: Clr().primaryColor,size: 20.00,)) : Container()
                       ],
@@ -290,6 +294,16 @@ class _ReviewPageState extends State<ReviewPage> {
     });
   }
 
+   deletedIcon(userid,index,id) {
+    if(ownerID == int.parse(userId.toString()) && userid == reviewList[index]['user_id']){
+      InkWell(onTap: (){
+        deleteReview(id);
+      },child: Icon(Icons.delete,color: Clr().primaryColor,size: 20.00,));
+    }else{
+      Container();
+    }
+  }
+
 
 // get Review
   void getReview() async {
@@ -299,6 +313,8 @@ class _ReviewPageState extends State<ReviewPage> {
     var result = await STM().post(ctx, Str().loading, 'show_review', body);
     setState(() {
       reviewList = result['review'];
+      ownerID = result['owner_id'];
+      print(ownerID);
       averageRate = result['review_avg'];
       percentList = result['review_summary'];
     });

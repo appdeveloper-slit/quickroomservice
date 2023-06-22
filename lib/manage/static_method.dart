@@ -201,7 +201,7 @@ class STM {
             color: Clr().white,
             borderRadius: BorderRadius.circular(Dim().d32),
           ),
-          child: Column(
+          child: Column(mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
                 padding: EdgeInsets.all(Dim().d12),

@@ -31,7 +31,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-enum GenderType {boyshostel, girlshostel,all,flat,girlsroom,boysroom}
+enum GenderType { boyshostel, girlshostel, all, flat, girlsroom, boysroom }
 
 enum PriceType { lowtohigh, hightolow }
 
@@ -275,7 +275,11 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          title: Image.asset('assets/resifinal.png', height: Dim().d56,width: Dim().d100,fit: BoxFit.fitHeight,alignment: Alignment.centerLeft),
+          title: Image.asset('assets/resifinal.png',
+              height: Dim().d56,
+              width: Dim().d100,
+              fit: BoxFit.fitHeight,
+              alignment: Alignment.centerLeft),
           // Wrap(
           //   children: [
           //     Text(
@@ -310,10 +314,9 @@ class _HomeState extends State<Home> {
                     SizedBox(
                       width: Dim().d80,
                       child: Text(
-                        setLocation.isNotEmpty
-                            ? setLocation.toString() + " "
-                            : city.toString(),
-                        overflow: TextOverflow.fade,
+                        '${setLocation.isNotEmpty ? setLocation.toString() + " " : city.toString()}',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
                         style: Sty().mediumText.copyWith(
                               color: Colors.white,
                               fontSize: Dim().d12,
@@ -405,86 +408,83 @@ class _HomeState extends State<Home> {
                       //   ],
                       // ),
                       Row(
-                              children: [
-                                Expanded(
-                                  child: Material(
-                                    shadowColor: Clr().grey.withOpacity(0.4),
-                                    elevation: 3.0,
-                                    borderRadius:
-                                        BorderRadius.circular(Dim().d20),
-                                    child: TextFormField(
-                                      decoration: Sty()
-                                          .TextFormFieldOutlineStyleWithHome
-                                          .copyWith(
-                                            hintText: 'Search hostel name',
-                                            suffixIcon: Padding(
-                                              padding:
-                                                  EdgeInsets.all(Dim().d16),
-                                              child: const Icon(Icons.search,
-                                                  color: Color(0xFF343E42)),
-                                            ),
-                                          ),
-                                      onChanged: searchresult,
+                        children: [
+                          Expanded(
+                            child: Material(
+                              shadowColor: Clr().grey.withOpacity(0.4),
+                              elevation: 3.0,
+                              borderRadius: BorderRadius.circular(Dim().d20),
+                              child: TextFormField(
+                                decoration: Sty()
+                                    .TextFormFieldOutlineStyleWithHome
+                                    .copyWith(
+                                      hintText: 'Search hostel name',
+                                      suffixIcon: Padding(
+                                        padding: EdgeInsets.all(Dim().d16),
+                                        child: const Icon(Icons.search,
+                                            color: Color(0xFF343E42)),
+                                      ),
                                     ),
+                                onChanged: searchresult,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: Dim().d20),
+                          PopupMenuButton(
+                            // ignore: sort_child_properties_last
+                            child: SvgPicture.asset('assets/filterhome.svg',
+                                height: Dim().d52),
+                            color: Color(0xff333741),
+                            offset: Offset(-40, 19),
+                            itemBuilder: (context) {
+                              return [
+                                PopupMenuItem(
+                                  child: Text(
+                                    'Hostel Category',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'NotoSansTaiTham',
+                                        color: Colors.white),
                                   ),
-                                ),
-                                SizedBox(width: Dim().d20),
-                                PopupMenuButton(
-                                  // ignore: sort_child_properties_last
-                                  child: SvgPicture.asset(
-                                      'assets/filterhome.svg',
-                                      height: Dim().d52),
-                                  color: Color(0xff333741),
-                                  offset: Offset(-40, 19),
-                                  itemBuilder: (context) {
-                                    return [
-                                      PopupMenuItem(
-                                        child: Text(
-                                          'Hostel Category',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'NotoSansTaiTham',
-                                              color: Colors.white),
-                                        ),
-                                        onTap: () {
-                                          Future.delayed(Duration(seconds: 0),
-                                              () => categoryFilter());
-                                          // getSearchList('Boys Hostel');
-                                        },
-                                      ),
-                                      PopupMenuItem(
-                                        child: Text(
-                                          'Pricing',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'NotoSansTaiTham',
-                                              color: Colors.white),
-                                        ),
-                                        onTap: () {
-                                          Future.delayed(Duration(seconds: 0),
-                                              () => priceFilter());
-                                        },
-                                      ),
-                                      PopupMenuItem(
-                                        child: Text(
-                                          'Rating',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'NotoSansTaiTham',
-                                              color: Colors.white),
-                                        ),
-                                        onTap: () {
-                                          getSearchList('type', 'rating');
-                                        },
-                                      ),
-                                    ];
+                                  onTap: () {
+                                    Future.delayed(Duration(seconds: 0),
+                                        () => categoryFilter());
+                                    // getSearchList('Boys Hostel');
                                   },
                                 ),
-                              ],
-                            ),
+                                PopupMenuItem(
+                                  child: Text(
+                                    'Pricing',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'NotoSansTaiTham',
+                                        color: Colors.white),
+                                  ),
+                                  onTap: () {
+                                    Future.delayed(Duration(seconds: 0),
+                                        () => priceFilter());
+                                  },
+                                ),
+                                PopupMenuItem(
+                                  child: Text(
+                                    'Rating',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'NotoSansTaiTham',
+                                        color: Colors.white),
+                                  ),
+                                  onTap: () {
+                                    getSearchList('type', 'rating');
+                                  },
+                                ),
+                              ];
+                            },
+                          ),
+                        ],
+                      ),
                       SizedBox(height: Dim().d20),
                       Column(
                         children: [
@@ -556,16 +556,17 @@ class _HomeState extends State<Home> {
                               ? GridView.builder(
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: Dim().d12,
-                                    mainAxisSpacing: Dim().d12,
-                                    childAspectRatio: 5/8
-                                  ),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: Dim().d12,
+                                          mainAxisSpacing: Dim().d12,
+                                          childAspectRatio: 5 / 8),
                                   // itemCount: resultList.length,
                                   itemCount: FillterList.length,
                                   itemBuilder: (context, index) {
-                                    return itemLayout(context, index, FillterList);
+                                    return itemLayout(
+                                        context, index, FillterList);
                                   },
                                 )
                               : Container(
@@ -615,7 +616,8 @@ class _HomeState extends State<Home> {
       },
       child: Container(
         color: Clr().white,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             list[index]['image_path'] != null
                 ? CachedNetworkImage(
@@ -652,7 +654,7 @@ class _HomeState extends State<Home> {
             Expanded(
               flex: 1,
               child: Padding(
-                padding:  EdgeInsets.symmetric(horizontal: Dim().d12),
+                padding: EdgeInsets.symmetric(horizontal: Dim().d12),
                 child: Text(
                   list[index]["hostel_type"].toString() +
                       '  \u20b9' +
@@ -671,7 +673,7 @@ class _HomeState extends State<Home> {
             Expanded(
               flex: 3,
               child: Padding(
-                padding:  EdgeInsets.symmetric(horizontal: Dim().d12),
+                padding: EdgeInsets.symmetric(horizontal: Dim().d12),
                 child: Text(
                   list[index]['address'],
                   maxLines: 3,
@@ -685,13 +687,15 @@ class _HomeState extends State<Home> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dim().d12),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
                     width: Dim().d56,
                     child: FittedBox(
                       fit: BoxFit.contain,
-                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Align(
                             alignment: Alignment.bottomLeft,
@@ -702,9 +706,10 @@ class _HomeState extends State<Home> {
                               ignoreGestures: true,
                               allowHalfRating: true,
                               itemCount: 1,
-                              itemSize:  11.00,
+                              itemSize: 11.00,
                               unratedColor: Clr().grey,
-                              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 4.0),
                               itemBuilder: (context, _) => const Icon(
                                 Icons.star,
                                 color: Colors.amber,
@@ -717,20 +722,31 @@ class _HomeState extends State<Home> {
                               },
                             ),
                           ),
-                          Text('${list[index]['review_avg_rating'].toString()}',style: Sty().mediumText.copyWith(fontSize: 11.00,fontWeight: FontWeight.w500))
+                          Text('${list[index]['review_avg_rating'].toString()}',
+                              style: Sty().mediumText.copyWith(
+                                  fontSize: 11.00, fontWeight: FontWeight.w500))
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(width: Dim().d72,child: FittedBox(
-                    fit: BoxFit.contain,
-                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('${list[index]['review_count'].toString()}',style: Sty().mediumText.copyWith(fontWeight: FontWeight.w500,fontSize:  11.00)),
-                        Text('Reviews',style: Sty().mediumText.copyWith(fontSize: 11.00,fontWeight: FontWeight.w500))
-                      ],
-                    ),
-                  )),
+                  SizedBox(
+                      width: Dim().d72,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('${list[index]['review_count'].toString()}',
+                                style: Sty().mediumText.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 11.00)),
+                            Text('Reviews',
+                                style: Sty().mediumText.copyWith(
+                                    fontSize: 11.00,
+                                    fontWeight: FontWeight.w500))
+                          ],
+                        ),
+                      )),
                 ],
               ),
             ),
@@ -763,7 +779,7 @@ class _HomeState extends State<Home> {
   void getSearchList(key, type) async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     FormData body = FormData.fromMap({
-       key: type,
+      key: type,
       'location_id': sp.getString('location_id').toString(),
       'latitude': sp.getString('lat').toString(),
       'longitude': sp.getString('lng').toString(),
@@ -917,15 +933,16 @@ class _HomeState extends State<Home> {
           );
         });
   }
+
   double reciprocal(double d) => 1 / d;
-  // // get Review
-  // void getReview() async {
-  //   FormData body = FormData.fromMap({
-  //     'hostel_id': hostel_id.toString(),
-  //   });
-  //   var result = await STM().post(ctx, Str().loading, 'show_review', body);
-  //   setState(() {
-  //     averageRate = result['review_avg'];
-  //   });
-  // }
+// // get Review
+// void getReview() async {
+//   FormData body = FormData.fromMap({
+//     'hostel_id': hostel_id.toString(),
+//   });
+//   var result = await STM().post(ctx, Str().loading, 'show_review', body);
+//   setState(() {
+//     averageRate = result['review_avg'];
+//   });
+// }
 }
